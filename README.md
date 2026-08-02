@@ -20,7 +20,7 @@ Then restart iTerm2 and open a new shell.
 | `home/.bash_profile` | `~/.bash_profile` | maestro PATH |
 | `home/.gitconfig` | `~/.gitconfig` | user + autocrlf |
 | `home/bin/nm-dashboard.mjs` | `~/bin/` | no-mistakes dashboard, `nm-dash` alias |
-| `config/nvim` | `~/.config/nvim` | |
+| (cloned) | `~/.config/nvim` | own fork of kickstart.nvim, `install.sh` clones it |
 | `config/ranger` | `~/.config/ranger` | |
 | `claude/` | `~/.claude/{settings.json,CLAUDE.md,hooks,scripts,skills,statusline-command.sh}` | authored config only; sessions, projects, and caches stay machine-local |
 | `iterm2/com.googlecode.iterm2.plist` | read directly by iTerm2 | `install.sh` sets `LoadPrefsFromCustomFolder`, so iTerm2 saves changes back into this repo |
