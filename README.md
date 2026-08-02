@@ -22,7 +22,6 @@ Then restart iTerm2 and open a new shell.
 | `home/bin/nm-dashboard.mjs` | `~/bin/` | no-mistakes dashboard, `nm-dash` alias |
 | (cloned) | `~/.config/nvim` | own fork of kickstart.nvim, `install.sh` clones it |
 | `config/ranger` | `~/.config/ranger` | |
-| `claude/` | `~/.claude/{settings.json,CLAUDE.md,hooks,scripts,skills,statusline-command.sh}` | authored config only; sessions, projects, and caches stay machine-local |
 | `iterm2/com.googlecode.iterm2.plist` | read directly by iTerm2 | `install.sh` sets `LoadPrefsFromCustomFolder`, so iTerm2 saves changes back into this repo |
 | `Brewfile` | | `brew bundle` restores formulae and casks |
 
@@ -32,16 +31,7 @@ Then restart iTerm2 and open a new shell.
 - Custom CLIs installed outside brew: `treehouse`, `no-mistakes`, `claude` live in
   `~/.local/bin`; `gh-axi`, `chrome-devtools-axi`, `lavish-axi` are project-local.
   Install those from their own sources.
-- Everything under `~/.claude` that is state: `projects/`, `sessions/`, `history.jsonl`,
-  `plugins/`, caches.
-
-## Caveats
-
-- `claude/settings.json` has one absolute path (`/Users/alex/.claude/hooks/herdr-agent-state.sh`)
-  in the `SessionStart` hook. Fix it if the username differs on the new machine.
-- Claude Code writes to `settings.json`; if a future version replaces the file instead of
-  editing in place the symlink is broken and you get an untracked real file. Check
-  `ls -l ~/.claude/settings.json` if changes stop showing up in `git status`.
+- Anything under `~/.claude` - Claude Code config is managed separately.
 
 ## Keeping it current
 

@@ -47,20 +47,12 @@ if [[ ! -e "$HOME/.config/nvim" ]]; then
 fi
 link "$DOTS/config/ranger" "$HOME/.config/ranger"
 
-# 5. Claude Code (only the authored parts; state/sessions stay machine-local)
-link "$DOTS/claude/settings.json" "$HOME/.claude/settings.json"
-link "$DOTS/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-link "$DOTS/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
-for d in hooks scripts skills; do
-  link "$DOTS/claude/$d" "$HOME/.claude/$d"
-done
-
-# 6. iTerm2 reads its prefs straight out of the repo, so changes are captured
+# 5. iTerm2 reads its prefs straight out of the repo, so changes are captured
 defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$DOTS/iterm2"
 defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 echo "==> iTerm2 pointed at $DOTS/iterm2 (restart iTerm2 to pick it up)"
 
-# 7. global npm packages
+# 6. global npm packages
 echo "==> npm globals"
 npm install -g pnpm@9.15.9 corepack @mariozechner/pi-coding-agent
 
