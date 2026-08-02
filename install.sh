@@ -51,7 +51,7 @@ echo "==> iTerm2 pointed at $DOTS/iterm2 (restart iTerm2 to pick it up)"
 
 # 6. global npm packages
 echo "==> npm globals"
-npm install -g pnpm@9.15.9 corepack @mariozechner/pi-coding-agent
+npm install -g pnpm@9.15.9 corepack
 
 cat <<'MSG'
 
