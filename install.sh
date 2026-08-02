@@ -49,13 +49,18 @@ defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$DOTS/iterm2"
 defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 echo "==> iTerm2 pointed at $DOTS/iterm2 (restart iTerm2 to pick it up)"
 
-# 6. global npm packages
+# 6. macOS system preferences
+echo "==> macOS defaults"
+"$DOTS/macos/defaults.sh"
+
+# 7. global npm packages
 echo "==> npm globals"
 npm install -g pnpm@9.15.9 corepack
 
 cat <<'MSG'
 
 Done. Remaining manual steps:
+  - log out and back in so the keyboard repeat rate applies everywhere
   - open a new zsh; zplug will offer to install the pure prompt, answer y
   - authenticate: gh auth login, gcloud auth login, claude (login), codex
   - ssh keys are NOT in this repo - copy ~/.ssh yourself or generate new ones
