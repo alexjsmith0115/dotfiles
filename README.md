@@ -20,7 +20,7 @@ Then restart iTerm2 and open a new shell.
 | `home/.bash_profile` | `~/.bash_profile` | maestro PATH |
 | `home/.gitconfig` | `~/.gitconfig` | user + autocrlf |
 | `home/bin/nm-dashboard.mjs` | `~/bin/` | no-mistakes dashboard, `nm-dash` alias |
-| (cloned) | `~/.config/nvim` | own fork of kickstart.nvim, `install.sh` clones it |
+| `config/nvim` | `~/.config/nvim` | kickstart.nvim, vendored - this repo is the source of truth |
 | `config/ranger` | `~/.config/ranger` | |
 | `iterm2/com.googlecode.iterm2.plist` | read directly by iTerm2 | `install.sh` sets `LoadPrefsFromCustomFolder`, so iTerm2 saves changes back into this repo |
 | `Brewfile` | | `brew bundle` restores formulae and casks |
