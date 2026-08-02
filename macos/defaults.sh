@@ -1,20 +1,14 @@
 #!/usr/bin/env bash
 # macOS system preferences, captured from the source machine on 2026-08-02.
-# Only settings that deviate from Apple's stock values are listed, so this stays
-# readable and a stock setting never gets silently re-asserted.
+# Scope is deliberately narrow: key repeat, Finder, Dock. Nothing else.
 # Run standalone (`~/dotfiles/macos/defaults.sh`) or via install.sh.
 set -euo pipefail
 
-echo "==> keyboard"
-# Key repeat, faster than the System Settings slider minimum.
-# Stock: KeyRepeat 6, InitialKeyRepeat 68. Lower is faster.
+echo "==> key repeat"
+# Faster than the System Settings slider minimum. Lower is faster.
+# Stock: KeyRepeat 6, InitialKeyRepeat 68.
 defaults write NSGlobalDomain KeyRepeat -int 2           # repeat rate once repeating
 defaults write NSGlobalDomain InitialKeyRepeat -int 15   # delay before repeat starts
-defaults write NSGlobalDomain "com.apple.keyboard.fnState" -bool true  # F-keys act as F1-F12
-
-echo "==> text input"
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool true
-defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool true
 
 echo "==> finder"
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
@@ -27,13 +21,10 @@ echo "==> dock"
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock tilesize -int 72
 
-echo "==> screenshots"
-defaults write com.apple.screencapture target -string "file"
-
-echo "==> restarting affected apps"
-killall Finder Dock SystemUIServer 2>/dev/null || true
+echo "==> restarting Finder and Dock"
+killall Finder Dock 2>/dev/null || true
 
 cat <<'MSG'
 
-Applied. Keyboard repeat changes need a logout/login to take effect everywhere.
+Applied. Key repeat changes need a logout/login to take effect everywhere.
 MSG
