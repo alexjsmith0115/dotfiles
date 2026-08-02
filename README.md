@@ -28,8 +28,6 @@ Then restart iTerm2 and open a new shell.
 ## Not in here (on purpose)
 
 - `~/.ssh` keys, `~/.aws`, gcloud and gh credentials - copy or re-auth per machine.
-- Custom CLIs installed outside brew: `treehouse`, `no-mistakes`, `claude` live in
-  `~/.local/bin`; `gh-axi`, `chrome-devtools-axi`, `lavish-axi` are project-local.
   Install those from their own sources.
 - Anything under `~/.claude` - Claude Code config is managed separately.
 
