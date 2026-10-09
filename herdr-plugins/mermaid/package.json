@@ -1,0 +1,16 @@
+{
+  "name": "herdr-mermaid",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Render Mermaid diagrams from herdr agent panes in the terminal",
+  "type": "module",
+  "bin": {
+    "herdr-mermaid": "bin/herdr-mermaid"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "beautiful-mermaid": "1.1.3"
+  }
+}

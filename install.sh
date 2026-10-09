@@ -57,6 +57,12 @@ echo "==> macOS defaults"
 echo "==> npm globals"
 npm install -g pnpm@9.15.9 corepack
 
+# 8. herdr plugins (linked, so edits in the repo apply on the next run)
+echo "==> herdr mermaid plugin"
+npm ci --prefix "$DOTS/herdr-plugins/mermaid"
+link "$DOTS/herdr-plugins/mermaid/bin/herdr-mermaid" "$HOME/.local/bin/herdr-mermaid"
+herdr plugin link "$DOTS/herdr-plugins/mermaid" >/dev/null
+
 cat <<'MSG'
 
 Done. Remaining manual steps:

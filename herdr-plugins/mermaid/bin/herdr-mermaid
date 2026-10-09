@@ -1,0 +1,73 @@
+#!/usr/bin/env node
+// Show Mermaid diagrams from the command line. Meant for agents: inside a
+// herdr pane it opens (or updates) the viewer split next to that pane; outside
+// herdr, or with --print, it renders straight to stdout.
+//
+//   herdr-mermaid diagram.mmd
+//   herdr-mermaid notes.md            # every ```mermaid block in the file
+//   herdr-mermaid <<'EOF'
+//   flowchart LR
+//     A --> B
+//   EOF
+//
+// Exits 1 with the parser error when a diagram does not parse, so an agent
+// can fix its syntax and try again.
+
+import fs from "node:fs";
+import { extractDiagrams, isDiagramHeader } from "../lib/extract.mjs";
+import { present } from "../lib/present.mjs";
+import { render } from "../lib/render.mjs";
+
+const args = process.argv.slice(2);
+if (args.includes("-h") || args.includes("--help")) {
+  console.log("usage: herdr-mermaid [--print] [--ascii] [FILE...]   (reads stdin when no FILE or FILE is -)");
+  process.exit(0);
+}
+const print = args.includes("--print");
+const ascii = args.includes("--ascii");
+const files = args.filter((a) => a === "-" || !a.startsWith("--"));
+
+const inputs = (files.length ? files : ["-"]).map((f) => fs.readFileSync(f === "-" ? 0 : f, "utf8"));
+
+const sources = inputs.flatMap((text) =>
+  /^\s*(`{3,}|~{3,})\s*mermaid\s*$/im.test(text) ? extractDiagrams(text) : [text.trim()],
+).filter(Boolean);
+
+if (sources.length === 0) {
+  console.error("herdr-mermaid: no diagram in input");
+  process.exit(1);
+}
+
+let failed = false;
+for (const [i, source] of sources.entries()) {
+  const header = source.split("\n")[0];
+  const result = render(source, { color: false });
+  if (!isDiagramHeader(header)) {
+    console.error(`herdr-mermaid: diagram ${i + 1} starts with "${header}", which is not a Mermaid diagram type`);
+    failed = true;
+  } else if (!result.ok && !result.unsupported) {
+    console.error(`herdr-mermaid: diagram ${i + 1} does not parse: ${result.error}`);
+    failed = true;
+  }
+}
+if (failed) process.exit(1);
+
+const paneId = process.env.HERDR_PANE_ID;
+if (paneId && !print) {
+  try {
+    const { viewer } = present(paneId, sources, "cli", { forceOpen: true });
+    if (viewer) {
+      console.log(`Showing ${sources.length} diagram(s) in herdr pane ${viewer}.`);
+      process.exit(0);
+    }
+    console.error("herdr-mermaid: could not open a viewer pane; printing instead");
+  } catch (err) {
+    console.error(`herdr-mermaid: ${err.message}; printing instead`);
+  }
+}
+
+for (const source of sources) {
+  const result = render(source, { ascii, color: Boolean(process.stdout.isTTY) });
+  console.log(result.ok ? result.lines.join("\n") : source);
+  console.log();
+}
