@@ -18,6 +18,12 @@ const DEFAULTS = {
   direction: "right",
   // How many rows of agent scrollback to search.
   scan_lines: 1500,
+  // "image": mermaid.js drawings via Kitty graphics; "text": box-drawing art.
+  display: "image",
+  // mermaid theme for images: "dark", "default", "neutral" or "forest".
+  theme: "dark",
+  // Image background: "transparent" or a CSS colour.
+  background: "transparent",
 };
 
 export function stateRoot() {

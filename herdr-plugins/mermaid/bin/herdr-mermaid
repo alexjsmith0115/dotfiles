@@ -10,13 +10,16 @@
 //     A --> B
 //   EOF
 //
-// Exits 1 with the parser error when a diagram does not parse, so an agent
-// can fix its syntax and try again.
+// Exits 1 with mermaid.js's own parser error when a diagram does not parse,
+// so an agent can fix its syntax and try again.
 
 import fs from "node:fs";
+import path from "node:path";
 import { extractDiagrams, isDiagramHeader } from "../lib/extract.mjs";
+import { closeBrowser, renderPng, shortError } from "../lib/image.mjs";
 import { present } from "../lib/present.mjs";
 import { render } from "../lib/render.mjs";
+import { loadConfig, paneDir } from "../lib/store.mjs";
 
 const args = process.argv.slice(2);
 if (args.includes("-h") || args.includes("--help")) {
@@ -38,21 +41,37 @@ if (sources.length === 0) {
   process.exit(1);
 }
 
+const paneId = process.env.HERDR_PANE_ID;
+const config = loadConfig();
+// Rendering here checks the syntax with mermaid.js itself, and leaves the
+// images in the viewer's cache so it can show them straight away.
+const cacheDir = paneId ? path.join(paneDir(paneId), "img") : null;
+
 let failed = false;
+let mermaidAvailable = true;
 for (const [i, source] of sources.entries()) {
   const header = source.split("\n")[0];
-  const result = render(source, { color: false });
   if (!isDiagramHeader(header)) {
     console.error(`herdr-mermaid: diagram ${i + 1} starts with "${header}", which is not a Mermaid diagram type`);
     failed = true;
-  } else if (!result.ok && !result.unsupported) {
-    console.error(`herdr-mermaid: diagram ${i + 1} does not parse: ${result.error}`);
-    failed = true;
+    continue;
+  }
+  if (!mermaidAvailable) continue;
+  try {
+    await renderPng(source, { theme: config.theme, background: config.background, cacheDir });
+  } catch (err) {
+    if (err.code === "NO_BROWSER") {
+      console.error(`herdr-mermaid: ${err.message} Skipping the syntax check.`);
+      mermaidAvailable = false;
+    } else {
+      console.error(`herdr-mermaid: diagram ${i + 1} does not parse:\n${shortError(err)}`);
+      failed = true;
+    }
   }
 }
+await closeBrowser();
 if (failed) process.exit(1);
 
-const paneId = process.env.HERDR_PANE_ID;
 if (paneId && !print) {
   try {
     const { viewer } = present(paneId, sources, "cli", { forceOpen: true });

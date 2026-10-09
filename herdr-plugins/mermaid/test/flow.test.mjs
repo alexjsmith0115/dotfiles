@@ -77,17 +77,28 @@ test("auto_open off sends a notification instead of splitting", () => {
   assert.ok(calls().some((c) => c[0] === "notification"));
 });
 
-test("CLI inside herdr shows the diagram in a viewer", () => {
+test("CLI inside herdr shows the diagram in a viewer, with its image already rendered", () => {
   const r = cli("sequenceDiagram\n  A->>B: hi\n", { HERDR_PANE_ID: "w1:p1" });
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout, /Showing 1 diagram\(s\) in herdr pane w1:p2/);
   assert.equal(history().length, 1);
+  const pngs = fs.readdirSync(path.join(tmp, "state", "w1_p1", "img"));
+  assert.equal(pngs.length, 1);
+  const png = fs.readFileSync(path.join(tmp, "state", "w1_p1", "img", pngs[0]));
+  assert.equal(png.subarray(1, 4).toString(), "PNG");
 });
 
-test("CLI rejects a diagram that does not parse, so the agent can fix it", () => {
+test("CLI rejects a misspelled diagram type, so the agent can fix it", () => {
   const r = cli("flowchat LR\n  A --> B\n", { HERDR_PANE_ID: "w1:p1" });
   assert.equal(r.status, 1);
   assert.match(r.stderr, /not a Mermaid diagram type/);
+  assert.equal(opens().length, 0);
+});
+
+test("CLI passes on mermaid.js's own parse error", () => {
+  const r = cli("flowchart LR\n  A --> B[[[\n", { HERDR_PANE_ID: "w1:p1" });
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /does not parse:\nParse error on line 2/);
   assert.equal(opens().length, 0);
 });
 
