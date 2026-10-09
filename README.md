@@ -23,6 +23,7 @@ Then restart iTerm2 and open a new shell.
 | `config/nvim` | `~/.config/nvim` | kickstart.nvim, vendored - this repo is the source of truth |
 | `config/ranger` | `~/.config/ranger` | |
 | `iterm2/com.googlecode.iterm2.plist` | read directly by iTerm2 | `install.sh` sets `LoadPrefsFromCustomFolder`, so iTerm2 saves changes back into this repo |
+| `herdr-plugins/mermaid` | `herdr plugin link` | renders agents' Mermaid diagrams in a split; `herdr-mermaid` CLI in `~/.local/bin`. See its [README](herdr-plugins/mermaid/README.md) |
 | `macos/defaults.sh` | | key repeat, Finder, and Dock only; run standalone or via `install.sh` |
 | `Brewfile` | | `brew bundle` restores formulae and casks |
 

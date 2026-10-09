@@ -1,0 +1,26 @@
+id = "dotfiles.mermaid"
+name = "Mermaid"
+version = "0.1.0"
+min_herdr_version = "0.7.4"
+description = "Render Mermaid diagrams from agent panes as terminal art"
+platforms = ["linux", "macos"]
+
+# When an agent finishes a turn, look for new diagrams in its output and show
+# them in a viewer split next to it.
+[[events]]
+on = "pane.agent_status_changed"
+command = ["node", "scan.mjs"]
+
+# Same scan, on demand, for the focused pane. Bind it to a key in herdr's
+# config with type = "plugin_action", command = "dotfiles.mermaid.scan".
+[[actions]]
+id = "scan"
+title = "Render Mermaid diagrams in this pane"
+contexts = ["pane"]
+command = ["node", "scan.mjs", "--force"]
+
+[[panes]]
+id = "viewer"
+title = "Mermaid"
+placement = "split"
+command = ["node", "viewer.mjs"]
