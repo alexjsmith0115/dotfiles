@@ -3,6 +3,8 @@
 A herdr plugin that renders Mermaid diagrams from your agents as box-drawing
 art in a split next to the agent.
 
+![An agent pane on the left has printed a Mermaid flowchart; the plugin's Mermaid split on the right draws it as boxes and arrows](docs/auto-split.png)
+
 ```
  Mermaid 2/2  flowchart · 14:02                n/p h/j/k/l a s o q
  ┌────────┐     ┌────────────┐     ┌────────┐
